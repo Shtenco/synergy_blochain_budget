@@ -1,0 +1,20 @@
+{
+  "schema_version": "sinergy.budget.eis-soi-request-plan/v1",
+  "policy": "NO_CREDENTIALS_IN_GIT",
+  "notes": [
+    "Configure the personal EIS token in the user-local dars config with: dars config edit",
+    "Keep requests empty until document/subsystem codes have been resolved from the EIS nsiDocumentTypes dictionary.",
+    "Only getNsiRequest, getDocsByReestrNumberRequest and getDocsByOrgRegionRequest are accepted by the adapter."
+  ],
+  "requests": [],
+  "examples_not_executed": [
+    {
+      "method": "getNsiRequest",
+      "kwargs": {
+        "base": "fz44",
+        "nsicode": "nsiDocumentTypes",
+        "prefix": "nsi/fz44/nsiDocumentType"
+      }
+    }
+  ]
+}
