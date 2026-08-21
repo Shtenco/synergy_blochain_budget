@@ -1,0 +1,35 @@
+{
+  "schema_version": "sinergy.budget.kbk-revision-inventory/v1",
+  "generated_for": "V0.4",
+  "policy": {
+    "cross_year_fallback": false,
+    "unverified_revision_auto_apply": false,
+    "rule": "A revision becomes resolvable only after an official artifact is archived, hashed and imported into the year partition."
+  },
+  "years": {
+    "2013": {"catalog_status":"DISCOVERY_REQUIRED","notes":"Pre-65n historical classifier corpus must be recovered from official archives before use.","acts":[]},
+    "2014": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №65н от 01.07.2013 and amendments","acts":[]},
+    "2015": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №65н from the 2014-2018 classifier lineage","acts":[]},
+    "2016": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №65н from the 2014-2018 classifier lineage","acts":[]},
+    "2017": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №65н from the 2014-2018 classifier lineage","acts":[]},
+    "2018": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №65н from the 2014-2018 classifier lineage","acts":[]},
+    "2019": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №132н","acts":[]},
+    "2020": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №85н (structure) + №86н (federal code lists)","acts":[]},
+    "2021": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №99н","acts":[]},
+    "2022": {"catalog_status":"PARTIAL_DISCOVERY_REQUIRED","lineage":"Минфин №75н от 08.06.2021","acts":[]},
+    "2023": {"catalog_status":"BASE_AND_KNOWN_AMENDMENTS_INVENTORIED","lineage":"Минфин №75н от 17.05.2022","known_amendments":["177н","19н","59н","100н","139н","160н","203н"],"acts":[]},
+    "2024": {"catalog_status":"BASE_AND_KNOWN_AMENDMENTS_INVENTORIED","lineage":"Минфин №80н от 01.06.2023","known_amendments":["185н","20н","50н","101н","130н","198н"],"acts":[]},
+    "2025": {"catalog_status":"PARTIAL_FINAL_RECONCILIATION_REQUIRED","lineage":"Минфин №85н от 10.06.2024","known_amendments":["165н","18н","48н","192н"],"notes":"Do not treat this list as complete until the official year-end publication history is reconciled.","acts":[]},
+    "2026": {
+      "catalog_status": "CURRENT_EFFECTIVE_REDACTION_PLUS_PENDING_INVENTORIED",
+      "lineage": "Минфин №70н от 10.06.2025",
+      "acts": [
+        {"order":"70н","date":"2025-06-10","status":"EFFECTIVE_BASE","official_url":"https://publication.pravo.gov.ru/document/0001202507170007","minjust_registration":"82955","auto_apply":true},
+        {"order":"171н","date":"2025-12-01","status":"EFFECTIVE_AMENDMENT","official_url":"https://publication.pravo.gov.ru/document/0001202601210003","minjust_registration":"84993","auto_apply":true},
+        {"order":"14н","date":"2026-02-24","status":"EFFECTIVE_AMENDMENT_LISTED_IN_CURRENT_70N_REDACTION","official_url":null,"auto_apply":false,"notes":"Fetch and hash the official publication artifact before registry import."},
+        {"order":"55н","date":"2026-04-28","status":"EFFECTIVE_AMENDMENT_LISTED_IN_CURRENT_70N_REDACTION","official_url":null,"auto_apply":false,"notes":"Fetch and hash the official publication artifact before registry import."},
+        {"order":"100н","date":"2026-07-27","status":"PENDING_MINJUST_REGISTRATION_AS_OF_2026-08-21","official_url":null,"auto_apply":false,"notes":"Never activate until state registration/effective publication is independently confirmed."}
+      ]
+    }
+  }
+}

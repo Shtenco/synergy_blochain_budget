@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "synergy-blockchain-budget"
-version = "0.3.0"
-description = "Cryptographically verifiable public federal-budget traceability ledger for SINERGY"
+version = "0.4.0"
+description = "Bulk-ingestable cryptographically verifiable public federal-budget ledger for SINERGY"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "SINERGY / SHTENCO"}]
@@ -13,10 +13,12 @@ dependencies = []
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.1,<4", "xlrd>=2.0.1,<3"]
+eis = ["dars>=2.1,<3"]
 dev = ["pytest>=8.0", "openpyxl>=3.1,<4", "xlrd>=2.0.1,<3"]
 
 [project.scripts]
 synergy-budget = "synergy_budget.cli:main"
+synergy-budget-bulk = "synergy_budget.bulk:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

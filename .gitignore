@@ -15,5 +15,10 @@ data/graph/
 data/traces/
 data/proofs/
 data/kbk_registry/imported/
+data/archive/
+data/eis_soi/
+data/warehouse/
+data/metrics/
 
 data/ledger/blocks.jsonl
+config/eis_soi_requests.local.json
