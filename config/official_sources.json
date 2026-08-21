@@ -1,9 +1,6 @@
 {
-  "schema_version": "sinergy.budget.source-catalog/v2",
-  "policy": {
-    "scope": "PUBLIC_OFFICIAL_DATA_ONLY",
-    "notes": "Never attempt to obtain classified or access-controlled budget annexes. Missing public detail is represented as a restricted reference, not inferred data."
-  },
+  "schema_version": "sinergy.budget.source-catalog/v3",
+  "policy": {"scope":"PUBLIC_OFFICIAL_DATA_ONLY","notes":"Never attempt to obtain classified or access-controlled budget annexes. Missing public detail is represented as a restricted reference, not inferred data."},
   "sources": [
     {"id":"pravo-federal-budget-law-426-fz","name":"Официальное опубликование: Федеральный закон № 426-ФЗ","url":"https://publication.pravo.gov.ru/document/0001202511280088","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["budget_law","appropriations","revenue","debt","deficit","legal_provenance"]},
     {"id":"treasury-federal-budget","name":"Федеральное казначейство: федеральный бюджет","url":"https://roskazna.gov.ru/ispolnenie-byudzhetov/federalnyj-byudzhet/","allowed_domains":["roskazna.gov.ru"],"fetch_mode":"html_discovery","enabled":true,"archive_year_param":"filter_year","archive_years":{"from":2013,"to":2026},"coverage":["execution","monthly","quarterly","annual","operational","historical_backfill"]},
@@ -13,8 +10,13 @@
     {"id":"treasury-government-finance-statistics","name":"Федеральное казначейство: статистика государственных финансов РФ","url":"https://roskazna.gov.ru/ispolnenie-byudzhetov/statistika-gosudarstvennyh-finansov-rf/","allowed_domains":["roskazna.gov.ru"],"fetch_mode":"html_discovery","enabled":true,"archive_year_param":"filter_year","coverage":["government_finance_statistics","xls"]},
     {"id":"treasury-open-data","name":"Федеральное казначейство: каталог открытых данных","url":"https://roskazna.gov.ru/opendata/","allowed_domains":["roskazna.gov.ru"],"fetch_mode":"html_discovery","enabled":true,"coverage":["open_data","budget_programmes","control","reference_data","csv"]},
     {"id":"electronic-budget-portal","name":"Единый портал бюджетной системы РФ / Электронный бюджет","url":"https://budget.gov.ru/","allowed_domains":["budget.gov.ru"],"fetch_mode":"external_api_pending","enabled":true,"coverage":["budget_system","classifiers","programmes","open_budget"]},
-    {"id":"eis-procurement","name":"ЕИС в сфере закупок","url":"https://zakupki.gov.ru/epz/main/public/document/view.html","allowed_domains":["zakupki.gov.ru"],"fetch_mode":"external_api_pending","enabled":true,"formats":["xml","zip"],"coverage":["procurements","contracts","suppliers","payments"],"normalizer":"synergy_budget.eis"},
+    {"id":"eis-procurement","name":"ЕИС в сфере закупок","url":"https://zakupki.gov.ru/epz/main/public/document/view.html","allowed_domains":["zakupki.gov.ru"],"fetch_mode":"external_api_pending","enabled":true,"formats":["xml","zip"],"coverage":["procurements","contracts","suppliers","payments","ikz"],"normalizer":"synergy_budget.eis"},
     {"id":"treasury-electronic-budget-exchange-formats","name":"Казначейство: форматы информационного взаимодействия Электронного бюджета","url":"https://roskazna.gov.ru/gis/ehlektronnyj-byudzhet/formaty-informacionnogo-vzaimodejstviya","allowed_domains":["roskazna.gov.ru"],"fetch_mode":"html_discovery","enabled":true,"coverage":["xml_schemas","reference_data","budget_payments"]},
+    {"id":"kbk-rules-82n","name":"Минфин: порядок формирования и применения КБК, приказ №82н","url":"https://publication.pravo.gov.ru/document/0001202206300028","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["kbk_structure","kbk_rules","classifier_provenance"]},
+    {"id":"kbk-2025-85n","name":"Минфин: коды бюджетной классификации на 2025 год, приказ №85н","url":"https://publication.pravo.gov.ru/document/0001202407170006","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["kbk_2025","classifier_provenance"]},
+    {"id":"kbk-2026-70n","name":"Минфин: коды бюджетной классификации на 2026 год, приказ №70н","url":"https://publication.pravo.gov.ru/document/0001202507170007","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["kbk_2026","classifier_provenance"]},
+    {"id":"kbk-2026-171n","name":"Минфин: изменения к КБК 2026, приказ №171н","url":"https://publication.pravo.gov.ru/document/0001202601210003","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["kbk_2026","classifier_revision"]},
+    {"id":"kbk-rules-2026-172n","name":"Минфин: изменения к порядку КБК №82н, приказ №172н","url":"https://publication.pravo.gov.ru/document/0001202603120016","allowed_domains":["publication.pravo.gov.ru"],"fetch_mode":"html_snapshot","enabled":true,"coverage":["kbk_structure","classifier_revision"]},
     {"id":"bus-gov-institutions","name":"Официальный сайт для размещения информации о государственных учреждениях","url":"https://bus.gov.ru/","allowed_domains":["bus.gov.ru"],"fetch_mode":"external_api_pending","enabled":true,"coverage":["institutions","state_assignments","financial_plans"]}
   ]
 }

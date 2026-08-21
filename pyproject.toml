@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "synergy-blockchain-budget"
-version = "0.2.0"
-description = "Reproducible public federal-budget ledger for the SINERGY blockchain"
+version = "0.3.0"
+description = "Cryptographically verifiable public federal-budget traceability ledger for SINERGY"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{name = "SINERGY / SHTENCO"}]
