@@ -8,5 +8,9 @@ build/
 
 data/raw/*
 !data/raw/.gitkeep
+data/raw-history/
+data/normalized/
+data/reconciliation/
+data/graph/
 
 data/ledger/blocks.jsonl
