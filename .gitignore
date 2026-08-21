@@ -12,5 +12,8 @@ data/raw-history/
 data/normalized/
 data/reconciliation/
 data/graph/
+data/traces/
+data/proofs/
+data/kbk_registry/imported/
 
 data/ledger/blocks.jsonl

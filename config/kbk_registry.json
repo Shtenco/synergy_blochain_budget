@@ -1,0 +1,33 @@
+{
+  "schema_version": "sinergy.budget.kbk-registry-catalog/v1",
+  "min_year": 2013,
+  "max_year": 2026,
+  "policy": {
+    "year_isolation": "STRICT",
+    "fallback_to_other_year": false,
+    "revision_resolution": "latest effective_from not later than as_of",
+    "unverified_year_behavior": "UNRESOLVED",
+    "notes": "A code is never interpreted using another budget year's classifier. Empty historical partitions are intentional until an official public classifier is imported with provenance."
+  },
+  "structure_sources": [
+    {"document":"Приказ Минфина России от 24.05.2022 № 82н","url":"https://publication.pravo.gov.ru/document/0001202206300028","role":"KBK structure and application rules"},
+    {"document":"Приказ Минфина России от 10.06.2025 № 71н","url":"https://publication.pravo.gov.ru/document/0001202509050006","role":"2025 amendment to Order 82n"},
+    {"document":"Приказ Минфина России от 01.12.2025 № 172н","url":"https://publication.pravo.gov.ru/document/0001202603120016","role":"2026 amendment to Order 82n"}
+  ],
+  "years": {
+    "2013":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2014":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2015":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2016":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2017":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2018":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2019":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2020":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2021":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2022":{"status":"PARTITION_RESERVED","source_documents":[]},
+    "2023":{"status":"OFFICIAL_SOURCE_METADATA_REGISTERED","source_documents":[{"document":"Приказ Минфина России от 22.11.2022 № 177н (изменения к №75н на 2023 год)","url":"https://publication.pravo.gov.ru/document/0001202212280040"},{"document":"Приказ Минфина России от 10.10.2023 № 160н (изменения к №75н на 2023 год)","url":"https://publication.pravo.gov.ru/document/0001202311200004"}]},
+    "2024":{"status":"OFFICIAL_SOURCE_METADATA_REGISTERED","source_documents":[{"document":"Приказ Минфина России от 19.09.2024 № 130н (изменения к №80н на 2024 год)","url":"https://publication.pravo.gov.ru/document/0001202410280013"}]},
+    "2025":{"status":"OFFICIAL_SOURCE_METADATA_REGISTERED","source_documents":[{"document":"Приказ Минфина России от 10.06.2024 № 85н","url":"https://publication.pravo.gov.ru/document/0001202407170006"},{"document":"Приказ Минфина России от 28.04.2025 № 48н","url":"https://publication.pravo.gov.ru/document/0001202506060006"},{"document":"Приказ Минфина России от 11.07.2025 № 89н","url":"https://publication.pravo.gov.ru/document/0001202510020016"}]},
+    "2026":{"status":"OFFICIAL_SOURCE_METADATA_REGISTERED","source_documents":[{"document":"Приказ Минфина России от 10.06.2025 № 70н","url":"https://publication.pravo.gov.ru/document/0001202507170007"},{"document":"Приказ Минфина России от 01.12.2025 № 171н","url":"https://publication.pravo.gov.ru/document/0001202601210003"}]}
+  }
+}

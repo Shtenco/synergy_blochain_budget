@@ -1,245 +1,220 @@
-# SINERGY Blockchain Budget · Федеральный бюджет РФ в проверяемом распределенном реестре
+# SINERGY Blockchain Budget · V0.3 Traceability Engine
 
-`blochain_budget` — бюджетный домен блокчейна **СИНЕРГИЯ**. Цель проекта — превращать официально опубликованные данные федерального бюджета России в воспроизводимый append-only ledger, где каждая нормализованная запись связана с первичным государственным источником и криптографическим доказательством его целостности.
+`blochain_budget` — бюджетный домен блокчейна **СИНЕРГИЯ**. Проект превращает официально опубликованные данные федерального бюджета РФ, Казначейства и публичного контура ЕИС в воспроизводимый append-only ledger с provenance, Merkle commitments и доказуемыми связями между бюджетной строкой, контрактом и платежом.
 
-## Статус: V0.2 Data Engine
+## Что добавляет V0.3
 
-V0.1 заложила provenance, Merkle roots, локальную hash-chain и EVM-якорь. V0.2 добавляет реальный слой машинного разбора и сверки:
+V0.1: provenance + hash-chain + Merkle roots + EVM anchor.  
+V0.2: ZIP/XLS/XLSX normalizers Казначейства + KBK decomposition + reconciliation + EIS contract normalizer.  
+**V0.3: строгая трассировка сущностей и versioned KBK registry.**
 
-- ZIP → вложенные XLS/XLSX/CSV/TXT;
-- XLSX через `openpyxl`, legacy XLS через `xlrd`;
-- защита от path traversal/zip-bomb по количеству и суммарному размеру элементов;
-- денежные величины через `Decimal` → целые копейки, без `float`;
-- разбор 20-значного КБК расходов: `ГРБС / Рз / Пр / ЦСР / ВР`;
-- автоматическое формирование records ассигнований, ЛБО, обязательств и кассового исполнения;
-- исторический backfill по годам с fail-closed проверкой атрибуции года;
-- reconciliation по полному КБК;
-- XML/ZIP normalizer публичных выгрузок реестра контрактов ЕИС;
-- граф `год → ГРБС → бюджетная строка → контракт → получатель → платеж`;
-- возможность включать нормализованный JSONL прямо в Merkle snapshot СИНЕРГИИ.
+- отдельный registry КБК для каждого бюджетного года `2013…2026`;
+- строгий запрет интерпретации КБК справочником другого года;
+- несколько редакций одного года через `effective_from` + `revision_id`;
+- provenance каждой импортированной строки классификатора;
+- EIS contract/payment normalizer с раздельными `registry_number`, `contract_number`, ИКЗ, ИНН и датами;
+- evidence-scored matching контракт ↔ платеж;
+- fail-closed сильные идентификаторы: противоречие по реестровому номеру/номеру контракта/ИКЗ запрещает auto-link;
+- неоднозначный лучший кандидат получает `AMBIGUOUS`, а не произвольную связь;
+- `КБК + заказчик + поставщик + период + сумма` усиливают доказательство, но сами по себе без сильного ID не превращаются в доказанную связь;
+- trace object со `source_record_root` и `evidence_hash`;
+- canonical `BUDGET_TRACE_COMMITMENT` record;
+- Merkle inclusion proof для каждого record тем же алгоритмом сортировки, что использует snapshot;
+- граф `LAW → APPROPRIATION → LIMIT → OBLIGATION → CONTRACT → SUPPLIER → PAYMENT → CASH_EXECUTION → TRACE_COMMITMENT → SINERGY_BUDGET_ROOT`.
 
-## Базовые параметры бюджета 2026
+## Версионированный KBK registry
 
-Seed V0.1 сохраняется без изменений и содержит основные публичные параметры Федерального закона от 28.11.2025 № 426-ФЗ:
+Каталог: `config/kbk_registry.json`.
 
-- доходы: **40 283 269 170 500 ₽**;
-- расходы: **44 069 704 164 500 ₽**;
-- дефицит: **3 786 434 994 000 ₽**;
-- прогноз ВВП: **235 067 млрд ₽**;
-- верхний предел внутреннего госдолга на 01.01.2027: **37 436 192 859 500 ₽**.
+Каждый год имеет отдельную partition. Пустая partition означает **не «используй ближайший справочник», а `UNRESOLVED`**. Это специально исключает ситуацию, когда ЦСР 2015 года незаметно интерпретируется классификатором 2026 года.
 
-## Установка
+Для 2026 года каталог уже содержит официальные provenance-ссылки на приказ Минфина №70н и его изменение №171н. Структурные правила отдельно ссылаются на приказ №82н и его изменения.
+
+### Импорт официального классификатора
 
 ```bash
-python -m venv .venv
-. .venv/bin/activate                 # Windows: .venv\\Scripts\\activate
+synergy-budget kbk-import kbk-2026.csv \
+  --year 2026 \
+  --revision-id 70n-base \
+  --effective-from 2026-01-01 \
+  --source-url https://publication.pravo.gov.ru/document/0001202507170007 \
+  --source-document "Приказ Минфина России от 10.06.2025 № 70н"
+```
+
+После официальной поправки:
+
+```bash
+synergy-budget kbk-import kbk-2026-amendment.csv \
+  --year 2026 \
+  --revision-id 171n \
+  --effective-from 2026-01-21 \
+  --source-url https://publication.pravo.gov.ru/document/0001202601210003
+```
+
+Проверка конкретного кода на конкретную дату:
+
+```bash
+synergy-budget kbk-resolve 02004112010490019241 \
+  --year 2026 \
+  --as-of 2026-02-01
+```
+
+## Нормализация ЕИС: контракт и платеж
+
+```bash
+synergy-budget eis eis-export.zip \
+  --year 2026 \
+  --output data/normalized/eis-2026.jsonl
+```
+
+При наличии соответствующих полей публичного XML V0.3 сохраняет:
+
+```text
+registry_number
+contract_number
+ikz
+customer_inn
+supplier_inn
+contract_date
+execution_end_date
+payment_id
+payment_date
+kbk
+amount_kopecks
+```
+
+`registry_number` и `contract_number` не подменяют друг друга.
+
+## Построение trace
+
+Сначала объединяем нормализованные публичные записи Казначейства/ЕИС в trace-engine:
+
+```bash
+synergy-budget trace \
+  --input data/normalized/treasury-2026.jsonl \
+  --input data/normalized/eis-2026.jsonl \
+  --registry-root data/kbk_registry/imported \
+  --as-of 2026-08-21 \
+  --output data/traces/traces.json \
+  --records-output data/traces/trace-records.jsonl
+```
+
+Основные статусы:
+
+- `TRACEABLE` — KBK разрешён в правильной годовой редакции, есть бюджетная строка, контракт и строго auto-linked payment;
+- `TRACEABLE_TO_CONTRACT` — бюджетная строка и контракт доказательно связаны, но строгая связь с платежом ещё не установлена;
+- `PARTIAL_KBK_UNRESOLVED` — код не подтверждён импортированным официальным справочником этого года;
+- `REVIEW_REQUIRED` — evidence недостаточно для строгой автоматической связи или есть неоднозначный payment candidate;
+- `PARTIAL_NO_BUDGET_LINE` — контракт есть, но точная бюджетная строка по `(budget_year, KBK)` не найдена.
+
+Автоматическая связь платежа требует сильного публичного идентификатора и отсутствия противоречий. Сумма и близость периода — только дополнительные признаки.
+
+## Merkle proof до snapshot root
+
+Trace превращается в canonical record `BUDGET_TRACE_COMMITMENT`.
+
+```bash
+synergy-budget proofs \
+  --records data/traces/trace-records.jsonl \
+  --output data/proofs/record-proofs.json
+```
+
+Затем snapshot должен быть построен по **тому же набору records**:
+
+```bash
+synergy-budget snapshot \
+  --records data/traces/trace-records.jsonl \
+  --as-of 2026-08-21T00:00:00+00:00
+```
+
+`proofs` использует тот же `object_hash` ordering, что и `build_snapshot`, поэтому `record_merkle_root` совпадает при одинаковом наборе records. После anchoring этого root в `SynergyBudgetAnchorRegistry.sol` получается цепочка проверки:
+
+```text
+официальный raw artifact
+      │ SHA-256
+      ▼
+canonical source record
+      │
+      ▼
+source_record_root
+      │ evidence_hash
+      ▼
+BUDGET_TRACE_COMMITMENT
+      │ Merkle proof
+      ▼
+record_merkle_root
+      │
+      ▼
+SINERGY:BUDGET anchor
+```
+
+## Trace graph
+
+```bash
+synergy-budget trace-graph \
+  --traces data/traces/traces.json \
+  --proof-bundle data/proofs/record-proofs.json \
+  --output data/graph/trace-graph.json
+```
+
+Целевая модель:
+
+```text
+ЗАКОН
+  ↓
+АССИГНОВАНИЕ
+  ↓
+ЛБО
+  ↓
+ОБЯЗАТЕЛЬСТВО
+  ↓
+КОНТРАКТ ──→ ПОСТАВЩИК
+  ↓
+ПЛАТЕЖ
+  ↓
+КАССОВОЕ ИСПОЛНЕНИЕ (агрегатная сверка КБК)
+  ↓
+TRACE COMMITMENT
+  ↓ Merkle proof
+SINERGY:BUDGET ROOT
+```
+
+## Инварианты V0.3
+
+1. **No cross-year KBK fallback.**
+2. **No strong-ID contradiction.** Совместно опубликованные несовпадающие `registry_number`, `contract_number` или ИКЗ запрещают auto-link.
+3. **No arbitrary tie-break.** Равные кандидаты не прикрепляются автоматически и помечают конкурирующие trace для review.
+4. **No amount-only proof.** Совпавшая сумма сама по себе не является доказательством платежа по контракту.
+5. **No false cash causality.** Кассовое исполнение КБК остаётся агрегатным evidence, пока публичный контур не даёт сильный transaction-level identifier.
+6. **No float money.** Денежные величины остаются integer kopecks.
+7. **Public-only.** Секретные/ограниченные данные не извлекаются и не реконструируются.
+8. **Deterministic commitments.** `trace_id`, `evidence_hash`, `source_record_root` и Merkle proofs воспроизводимы из одинаковых входов.
+
+## Тесты
+
+```bash
 pip install -e '.[dev]'
 pytest -q
 ```
 
-## 1. Текущий сбор официальных артефактов
+V0.3 добавляет tests для:
 
-```bash
-synergy-budget collect
-```
+- year-isolated KBK registry;
+- revision resolution `as_of`;
+- strong contract/payment link;
+- hard reject при конфликте сильного ID;
+- ambiguity handling;
+- trace + KBK resolution;
+- record Merkle proof;
+- trace graph до SINERGY root;
+- EIS payment + ИКЗ;
+- XLSX classifier import;
+- backward compatibility V0.2 EIS/Merkle.
 
-Результат:
+## Ограничение, которое проект не скрывает
 
-```text
-data/raw/<source-id>/<sha-prefix>--<original-name>
-data/manifests/latest.json
-```
+Код не утверждает, что исторические справочники 2013–2022 уже полностью импортированы. Для них созданы изолированные partitions, но до получения и хэширования официального публичного classifier dataset результат остаётся `UNRESOLVED`. Это безопаснее, чем «додумывать» исторические значения из современного КБК.
 
-Raw-объекты не должны тихо перезаписываться. Идентичность файла задается SHA-256.
+Полный физический backfill крупных файлов Казначейства/ЕИС также должен выполняться на networked archive/data node с прямым доступом к официальным доменам. Репозиторий хранит pipeline, provenance rules, commitments и код верификации.
 
-## 2. Исторический backfill Казначейства
-
-```bash
-synergy-budget backfill \\
-  --source treasury-federal-budget \\
-  --from-year 2013 \\
-  --to-year 2026
-```
-
-Критическое правило V0.2: запрошенный `filter_year=2018` **не считается доказательством**, что сервер реально вернул данные 2018 года. `report_year` фиксируется только при наличии подтверждения в URL/имени файла; иначе артефакт попадает в `unverified-<year>` и автоматически не маркируется guessed-year.
-
-## 3. Нормализация ZIP/XLS/XLSX Казначейства
-
-```bash
-synergy-budget normalize data/raw/report.zip \\
-  --year 2026 \\
-  --source treasury-federal-budget \\
-  --output data/normalized/treasury-2026.jsonl
-```
-
-Каждая запись содержит:
-
-```text
-record_type
-budget_year
-amount_kopecks
-currency
-dimensions:
-  kbk
-  grbs
-  section
-  subsection
-  target_article
-  expense_type
-  program_article
-  expense_direction
-source:
-  source_id
-  artifact
-  artifact_sha256
-  sheet
-  row
-  amount_column
-```
-
-## 4. Онтология КБК расходов
-
-Код расходов содержит двадцать знаков:
-
-```text
-1–3    ГРБС
-4–5    Раздел
-6–7    Подраздел
-8–17   Целевая статья
-18–20  Вид расходов
-```
-
-ЦСР дополнительно декомпозируется на программную/непрограммную статью (5 знаков) и направление расходов (5 знаков). Поддерживаются буквенно-цифровые символы, применяемые в целевых статьях федерального бюджета.
-
-## 5. Reconciliation
-
-```bash
-synergy-budget reconcile \\
-  --input data/normalized/treasury-2026.jsonl \\
-  --output data/reconciliation/federal-2026.json
-```
-
-По каждой бюджетной строке отдельно считаются:
-
-- ассигнования;
-- лимиты бюджетных обязательств;
-- бюджетные/денежные обязательства;
-- кассовое исполнение;
-- отклонение;
-- исполнение в basis points;
-- статус сверки.
-
-Контрольный план = **ЛБО, если опубликованы; иначе ассигнования**. Ассигнования и ЛБО никогда не суммируются как будто это два независимых источника денег.
-
-## 6. ЕИС закупок
-
-Транспорт получения данных отделен от normalizer. Если публичная выгрузка ЕИС уже скачана как XML/ZIP:
-
-```bash
-synergy-budget eis contracts.zip \\
-  --year 2026 \\
-  --output data/normalized/eis-contracts-2026.jsonl
-```
-
-Normalizer извлекает, когда поля присутствуют в публичном XML:
-
-- реестровый номер;
-- номер контракта;
-- ИНН заказчика;
-- ИНН поставщика;
-- цену;
-- КБК.
-
-Это дает следующий мост:
-
-```text
-КБК Казначейства
-      │
-      ▼
-БЮДЖЕТНАЯ СТРОКА
-      │
-      ▼
-КОНТРАКТ ЕИС
-      │
-      ▼
-ПОСТАВЩИК / ПОЛУЧАТЕЛЬ
-      │
-      ▼
-ПЛАТЕЖ / КАССОВОЕ ИСПОЛНЕНИЕ
-```
-
-## 7. Граф движения бюджетного рубля
-
-```bash
-synergy-budget graph \\
-  --input data/normalized/treasury-2026.jsonl \\
-  --output data/graph/budget-flow-2026.json
-```
-
-Типы узлов: `BUDGET_YEAR`, `GRBS`, `BUDGET_LINE`, `CONTRACT`, `RECIPIENT`, `PAYMENT`.
-
-Основные связи: `APPROPRIATES`, `CLASSIFIES`, `FUNDS`, `AWARDED_TO`, `SETTLED_BY`.
-
-## 8. Merkle snapshot и SINERGY:BUDGET
-
-Нормализованные записи можно включить в тот же snapshot, что и seed закона:
-
-```bash
-synergy-budget snapshot \\
-  --records data/normalized/treasury-2026.jsonl \\
-  --as-of 2026-08-21T00:00:00+00:00
-```
-
-Создаются `recordMerkleRoot`, `artifactMerkleRoot`, snapshot ID и anchor envelope. Контракт `contracts/SynergyBudgetAnchorRegistry.sol` хранит последовательные публичные anchors для EVM-совместимого слоя СИНЕРГИИ.
-
-## Архитектура хранения
-
-```text
-Официальный источник
-       │
-       ▼
-RAW / Data Availability nodes
-       │  SHA-256
-       ▼
-Normalizer
-       │
-       ▼
-Canonical budget records
-       │
-       ├── Reconciliation
-       ├── Budget Flow Graph
-       └── Merkle Forest
-                 │
-                 ▼
-           SINERGY:BUDGET
-```
-
-Большие PDF/ZIP/XLS не надо складывать целиком в Solidity storage. Полные байты реплицируются content-addressed archive nodes; consensus layer хранит commitments, provenance и нормализованные события.
-
-## Официальные источники
-
-Каталог `config/official_sources.json` включает:
-
-- `publication.pravo.gov.ru` — федеральный закон и публичные приложения;
-- `roskazna.gov.ru` — федеральный бюджет, консолидированный бюджет, внебюджетные фонды, государственная финансовая статистика и открытые данные;
-- форматы информационного взаимодействия ГИИС «Электронный бюджет»;
-- `budget.gov.ru` — отдельный будущий API-adapter;
-- `zakupki.gov.ru` — контракты/закупки;
-- `bus.gov.ru` — учреждения.
-
-## Граница публичности
-
-Проект обрабатывает только официально опубликованный публичный контур. Секретные/совершенно секретные приложения не извлекаются и не реконструируются. Для них допускается только `RESTRICTED_REFERENCE` — юридический факт существования без содержания.
-
-## Следующий строгий этап
-
-V0.3 должен закрыть уже не парсинг, а **сопоставление**:
-
-1. загрузить реальный исторический корпус Казначейства на networked data-node;
-2. построить versioned справочник ГРБС/КБК/ЦСР по годам;
-3. сопоставить ЕИС ↔ Казначейство по КБК + заказчику + периоду + сумме;
-4. подключить публичные идентификаторы казначейских платежей там, где они официально доступны;
-5. выдавать Merkle proof от конкретного контракта/платежа до snapshot root;
-6. добавить независимые validator manifests и quorum anchoring.
-
-Подробности V0.2: [`docs/V0_2_DATA_ENGINE.md`](docs/V0_2_DATA_ENGINE.md).
+Подробная архитектура V0.3: [`docs/V0_3_TRACEABILITY.md`](docs/V0_3_TRACEABILITY.md).
