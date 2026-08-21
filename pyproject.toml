@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synergy-blockchain-budget"
+version = "0.1.0"
+description = "Reproducible public federal-budget ledger for the SINERGY blockchain"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "SINERGY / SHTENCO"}]
+dependencies = []
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.1"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+synergy-budget = "synergy_budget.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

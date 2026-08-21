@@ -1,0 +1,12 @@
+{
+  "schema_version": "sinergy.budget.seed/v1",
+  "description": "Core public parameters from Article 1 of Federal Law No. 426-FZ dated 2025-11-28. Amounts are stored as integer kopecks.",
+  "records": [
+    {"record_type":"FEDERAL_BUDGET_REVENUE_PLAN","budget_year":2026,"amount_kopecks":4028326917050000,"currency":"RUB","dimensions":{"scope":"federal_budget","measure":"total_revenue"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","article":"1.1.1","url":"https://publication.pravo.gov.ru/document/0001202511280088"}},
+    {"record_type":"FEDERAL_BUDGET_EXPENDITURE_PLAN","budget_year":2026,"amount_kopecks":4406970416450000,"currency":"RUB","dimensions":{"scope":"federal_budget","measure":"total_expenditure"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","article":"1.1.2","url":"https://publication.pravo.gov.ru/document/0001202511280088"}},
+    {"record_type":"FEDERAL_BUDGET_DEFICIT_PLAN","budget_year":2026,"amount_kopecks":378643499400000,"currency":"RUB","dimensions":{"scope":"federal_budget","measure":"deficit"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","article":"1.1.5","url":"https://publication.pravo.gov.ru/document/0001202511280088"}},
+    {"record_type":"FEDERAL_BUDGET_GDP_FORECAST","budget_year":2026,"amount_kopecks":23506700000000000,"currency":"RUB","dimensions":{"measure":"gdp_forecast","unit_source":"billion_rubles"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","article":"1.1","url":"https://publication.pravo.gov.ru/document/0001202511280088"}},
+    {"record_type":"FEDERAL_BUDGET_INTERNAL_DEBT_CEILING","budget_year":2026,"amount_kopecks":3743619285950000,"currency":"RUB","dimensions":{"as_of":"2027-01-01","measure":"internal_public_debt_ceiling"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","article":"1.1.3","url":"https://publication.pravo.gov.ru/document/0001202511280088"}},
+    {"record_type":"CLASSIFIED_ANNEX_REFERENCE","budget_year":2026,"amount_kopecks":null,"currency":"RUB","visibility":"RESTRICTED_REFERENCE","dimensions":{"annexes":[9,10,12,13],"policy":"metadata_only_no_access_attempt"},"source":{"authority":"Официальное опубликование правовых актов","law":"426-ФЗ","date":"2025-11-28","url":"https://publication.pravo.gov.ru/document/0001202511280088"}}
+  ]
+}
