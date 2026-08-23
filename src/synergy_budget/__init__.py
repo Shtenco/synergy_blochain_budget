@@ -1,3 +1,3 @@
-"""SINERGY public-budget MOCK corpus, bulk ingest and traceability ledger."""
+"""SINERGY public-budget MOCK corpus, ROI simulator, bulk ingest and traceability ledger."""
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
