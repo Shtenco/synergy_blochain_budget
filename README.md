@@ -253,3 +253,42 @@ flowchart LR
 Любое сильное утверждение должно указывать на воспроизводимый тест, benchmark, ledger/evidence artifact или формально проверяемый контракт.
 
 <!-- SYNERGY-FEDERATION-PASSPORT:END -->
+
+---
+
+# 🏛️ Глубокий доказательный паспорт Budget Traceability
+
+## Реальная архитектура `main`
+
+Репозиторий уже имеет Python package `src/synergy_budget/`, CLI, официальный-source config, KBK registry, EIS/Treasury normalizers, trace graph, Merkle proofs, EVM anchor и test generations V0.1–V0.6.
+
+```mermaid
+flowchart LR
+    OFF[🏛️ Official public sources] --> RAW[📦 Raw artifact + SHA256]
+    RAW --> NORM[🧩 Normalization]
+    NORM --> KBK[📚 Versioned KBK resolution]
+    KBK --> TRACE[🔗 Contract/payment trace]
+    TRACE --> MERKLE[🌳 Merkle proof]
+    MERKLE --> EVM[⛓️ Budget root anchor]
+```
+
+## Evidence discipline
+
+Система правильно разделяет сильные идентификаторы и вспомогательные признаки: сумма/период сами по себе не доказывают связь платежа с контрактом; conflicting strong IDs fail closed; ambiguity остаётся `REVIEW_REQUIRED`.
+
+## Data-security boundary
+
+Публичный контур не пытается получать или реконструировать секретные приложения бюджета. Для непубличного материала допускается только `RESTRICTED_REFERENCE`.
+
+## Реальные проверяемые anchors
+
+- `config/kbk_registry.json`;
+- `src/synergy_budget/trace.py`;
+- `src/synergy_budget/proofs.py`;
+- `src/synergy_budget/merkle.py`;
+- `contracts/SynergyBudgetAnchorRegistry.sol`;
+- `tests/test_v02.py` … `test_v06_roi.py`.
+
+## Следующий рубеж
+
+signed ingest manifests → independent source publishers → large archive node → reproducible public corpus snapshot → cross-check Merkle roots on independent machine → explicit separation of observed state ROI from modeled ROI.
