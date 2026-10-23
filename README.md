@@ -13,7 +13,7 @@ V0.2: ZIP/XLS/XLSX normalizers Казначейства + KBK decomposition + re
 - несколько редакций одного года через `effective_from` + `revision_id`;
 - provenance каждой импортированной строки классификатора;
 - EIS contract/payment normalizer с раздельными `registry_number`, `contract_number`, ИКЗ, ИНН и датами;
-- evidence-scored matching контракт ↔ платеж;
+- evidence-scored matching контракт  платеж;
 - fail-closed сильные идентификаторы: противоречие по реестровому номеру/номеру контракта/ИКЗ запрещает auto-link;
 - неоднозначный лучший кандидат получает `AMBIGUOUS`, а не произвольную связь;
 - `КБК + заказчик + поставщик + период + сумма` усиливают доказательство, но сами по себе без сильного ID не превращаются в доказанную связь;
@@ -223,17 +223,17 @@ V0.3 добавляет tests для:
 <!-- SYNERGY-FEDERATION-PASSPORT:START -->
 ---
 
-## 🧭 SYNERGY federation passport
+##  SYNERGY federation passport
 
-**Домен:** 📚 Blockchain traceability / budget  
+**Домен:**  Blockchain traceability / budget  
 **Архитектурный родитель:** [`synergy_ai_blockchain`](https://github.com/Shtenco/synergy_ai_blockchain)  
 **Архитектурный корень:** [`synergy_system`](https://github.com/Shtenco/synergy_system)
 
 ```mermaid
 flowchart LR
-    SYS[🧭 synergy_system] --> P[synergy_ai_blockchain]
+    SYS[ synergy_system] --> P[synergy_ai_blockchain]
     P --> THIS[synergy_blochain_budget]
-    THIS --> E[📦 Evidence / outputs]
+    THIS --> E[ Evidence / outputs]
 ```
 
 Архитектурная принадлежность не заменяет доказанную интеграцию. Runtime-связь должна подтверждаться контрактами, manifests, deployment-конфигурацией или тестами.
@@ -244,9 +244,9 @@ flowchart LR
 
 ### Навигация
 
-- [📚 Атлас 75 репозиториев](https://github.com/Shtenco/synergy_system/blob/main/docs/SYNERGY_REPOSITORY_ATLAS.md)
-- [🧾 Registry](https://github.com/Shtenco/synergy_system/blob/main/registry/SYNERGY_REPOSITORIES.json)
-- [🧭 Architecture root](https://github.com/Shtenco/synergy_system)
+- [ Атлас 75 репозиториев](https://github.com/Shtenco/synergy_system/blob/main/docs/SYNERGY_REPOSITORY_ATLAS.md)
+- [ Registry](https://github.com/Shtenco/synergy_system/blob/main/registry/SYNERGY_REPOSITORIES.json)
+- [ Architecture root](https://github.com/Shtenco/synergy_system)
 
 ### Evidence rule
 
@@ -256,7 +256,7 @@ flowchart LR
 
 ---
 
-# 🏛️ Глубокий доказательный паспорт Budget Traceability
+#  Глубокий доказательный паспорт Budget Traceability
 
 ## Реальная архитектура `main`
 
@@ -264,12 +264,12 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    OFF[🏛️ Official public sources] --> RAW[📦 Raw artifact + SHA256]
-    RAW --> NORM[🧩 Normalization]
-    NORM --> KBK[📚 Versioned KBK resolution]
-    KBK --> TRACE[🔗 Contract/payment trace]
-    TRACE --> MERKLE[🌳 Merkle proof]
-    MERKLE --> EVM[⛓️ Budget root anchor]
+    OFF[ Official public sources] --> RAW[ Raw artifact + SHA256]
+    RAW --> NORM[ Normalization]
+    NORM --> KBK[ Versioned KBK resolution]
+    KBK --> TRACE[ Contract/payment trace]
+    TRACE --> MERKLE[ Merkle proof]
+    MERKLE --> EVM[ Budget root anchor]
 ```
 
 ## Evidence discipline
