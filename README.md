@@ -1,3 +1,9 @@
+<!-- RESEARCH-V2-2026:START -->
+<img src="assets/readme/scientific-process-v2.svg" width="100%" alt="BLOCKCHAIN BUDGET / TRACEABILITY SCIENCE"/>
+
+[Научно-техническое досье V2](docs/SCIENTIFIC_DOSSIER_V2_2026.md) — алгоритмы, формализация, исследования и перспективы. Предыдущий README сохранён полностью.
+<!-- RESEARCH-V2-2026:END -->
+
 # SINERGY Blockchain Budget · V0.3 Traceability Engine
 
 `blochain_budget` — бюджетный домен блокчейна **СИНЕРГИЯ**. Проект превращает официально опубликованные данные федерального бюджета РФ, Казначейства и публичного контура ЕИС в воспроизводимый append-only ledger с provenance, Merkle commitments и доказуемыми связями между бюджетной строкой, контрактом и платежом.
